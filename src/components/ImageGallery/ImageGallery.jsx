@@ -7,115 +7,173 @@ import { Loader } from 'components/Loader/Loader';
 import Button from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
 
-const { Component } = require('react');
+import { useEffect, useState } from 'react';
 
-class ImageGallery extends Component {
-    state = {
-        gallery: [],
-        page: 1,
-        total: 0,
-        isLoading: false,
-        showModal: false,
-        largeImageURL: '',
-        // isNewSearch: true,
-    };
+// const { Component } = require('react');
 
-    componentDidUpdate(prevProps, prevState) {
-        if (
-            prevProps.searchText !== this.props.searchText ||
-            prevState.page < this.state.page
-        ) {
-            // fetch(
-            //     'https://pixabay.com/api/?q=cat&page=1&key=35752647-f3bb72efc92106ef6393a7805&image_type=photo&orientation=horizontal&per_page=12'
-            // )
-            //     .then(response => response.json())
-            //     .then(
-            //         response => this.setState({ gallery: [...response.hits] })
-            //     );
-            // const response = getImages(this.props.searchText, this.state.page)
+const ImageGallery = props => {
+    // console.log(props);
 
-            // this.setState({ gallery: [] });
-            // this.setState({ isLoading: true });
-            this.setState({ isLoading: true });
+    const { searchText } = props;
+    // console.log(page);
+    // console.log('searchText: >> ', searchText);
 
-            getImages(this.props.searchText, this.state.page)
-                .then(response => {
-                    toast.success('Wow so easy!', { autoClose: 500 });
+    // const oldSearchText = searchText;
+    // console.log('oldSearchText: >> ', oldSearchText);
 
-                    prevProps !== this.props
-                        ? this.setState({ gallery: [...response.hits] })
-                        : this.setState({
-                              gallery: [...prevState.gallery, ...response.hits],
-                          });
+    // state = {
+    // gallery: [],
+    // page: 1,
+    // total: 0,
+    // isLoading: false,
+    // showModal: false,
+    // largeImageURL: '',
+    // isNewSearch: true,
+    // };
 
-                    // this.setState({
-                    //     gallery: [...prevState.gallery, ...response.hits],
-                    // });
+    const [gallery, setGallery] = useState([]);
+    const [page, setPage] = useState(1);
+    const [total, setTotal] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [largeImageURL, setLargeImageURL] = useState('');
+    // page = pageStart;
 
-                    const totalPages = Math.round(response.totalHits / 12);
-                    if (response.totalHits <= 0) {
-                        toast.info('Sorry, nothing was found!');
-                    }
-                    this.setState({ total: totalPages });
-                })
-                .catch(function (error) {
-                    // обробка помилки
-                    // console.log(error);
-                    toast.error(error.message, {
-                        autoClose: 5000,
-                        theme: 'colored',
-                    });
-                })
-                .finally(() => {
-                    // виконується завжди
-                    this.setState({ isLoading: false });
-                });
+    // useEffect(() => setPage(1), []);
+
+    useEffect(() => {
+        if (!searchText) {
+            return;
         }
+        // if (
+        // prevProps.searchText !== this.props.searchText ||
+        // prevState.page < this.state.page
+        // ) {
+        setIsLoading(true);
+
+        console.log(searchText);
+        console.log(page);
+
+        getImages(searchText, page)
+            .then(response => {
+                console.log(response);
+                console.log(page);
+                if (response.totalHits <= 0) {
+                    toast.info('Sorry, nothing was found!');
+                    return;
+                }
+                toast.success('Wow so easy!', { autoClose: 500 });
+
+                // setGallery(gallery => [...gallery, ...response.hits]);
+
+                // prevProps !== this.props
+
+                page === 1
+                    ? setGallery([...response.hits])
+                    : setGallery(gallery => [...gallery, ...response.hits]);
+
+                const totalPages = Math.round(response.totalHits / 12);
+
+                setTotal(totalPages);
+            })
+            .catch(function (error) {
+                // обробка помилки
+                // console.log(error);
+                toast.error(error.message, {
+                    autoClose: 5000,
+                    theme: 'colored',
+                });
+            })
+            .finally(() => {
+                // виконується завжди
+                setIsLoading(false);
+            });
+        // }
+    }, [searchText, page]);
+
+    // componentDidUpdate(prevProps, prevState) {
+    //     if (
+    //         prevProps.searchText !== this.props.searchText ||
+    //         prevState.page < this.state.page
+    //     ) {
+    //         this.setState({ isLoading: true });
+
+    //         getImages(this.props.searchText, this.state.page)
+    //             .then(response => {
+    //                 toast.success('Wow so easy!', { autoClose: 500 });
+
+    //                 prevProps !== this.props
+    //                     ? this.setState({ gallery: [...response.hits] })
+    //                     : this.setState({
+    //                           gallery: [...prevState.gallery, ...response.hits],
+    //                       });
+
+    //                 const totalPages = Math.round(response.totalHits / 12);
+    //                 if (response.totalHits <= 0) {
+    //                     toast.info('Sorry, nothing was found!');
+    //                 }
+    //                 this.setState({ total: totalPages });
+    //             })
+    //             .catch(function (error) {
+    //                 // обробка помилки
+    //                 // console.log(error);
+    //                 toast.error(error.message, {
+    //                     autoClose: 5000,
+    //                     theme: 'colored',
+    //                 });
+    //             })
+    //             .finally(() => {
+    //                 // виконується завжди
+    //                 this.setState({ isLoading: false });
+    //             });
+    //     }
+    // }
+
+    const hedleLoadMore = event => {
+        // this.setState(({ page }) => ({ page: page + 1 }));
+        setPage(page + 1);
+        // page = page + 1;
+    };
+
+    function togleModal(largeImageURL) {
+        // this.setState(state => ({
+        // showModal: !this.state.showModal,
+        setShowModal(!showModal);
+        // largeImageURL: largeImageURL,
+        setLargeImageURL(largeImageURL);
+        // }));
     }
 
-    hedleLoadMore = event => {
-        this.setState(({ page }) => ({ page: page + 1 }));
-    };
-
-    togleModal = largeImageURL => {
-        this.setState(state => ({
-            showModal: !this.state.showModal,
-            largeImageURL: largeImageURL,
-        }));
-    };
-
-    render() {
-        return (
-            <>
-                {this.state.isLoading && <Loader />}
-                {this.state.gallery && (
-                    <>
-                        <ul className={css.ImageGallery}>
-                            {this.state.gallery.map(item => (
-                                <ImageGalleryItem
-                                    webformatURL={item.webformatURL}
-                                    largeImageURL={item.largeImageURL}
-                                    description={item.tags}
-                                    key={item.id}
-                                    onClick={this.togleModal}
-                                />
-                            ))}
-                        </ul>
-                        {this.state.total > this.state.page && (
-                            <Button onLoadMore={this.hedleLoadMore} />
-                        )}
-                        {this.state.showModal && (
-                            <Modal
-                                largeImageURL={this.state.largeImageURL}
-                                closeModal={this.togleModal}
+    // render() {
+    return (
+        <>
+            {isLoading && <Loader />}
+            {gallery && (
+                <>
+                    <ul className={css.ImageGallery}>
+                        {gallery.map(item => (
+                            <ImageGalleryItem
+                                webformatURL={item.webformatURL}
+                                largeImageURL={item.largeImageURL}
+                                description={item.tags}
+                                key={item.id}
+                                onClick={togleModal}
                             />
-                        )}
-                    </>
-                )}
-            </>
-        );
-    }
-}
+                        ))}
+                    </ul>
+                    {total > page && <Button onLoadMore={hedleLoadMore} />}
+                    {showModal && (
+                        <Modal
+                            largeImageURL={largeImageURL}
+                            closeModal={togleModal}
+                        />
+                    )}
+                </>
+            )}
+        </>
+    );
+    // }
+};
 
 export default ImageGallery;
 

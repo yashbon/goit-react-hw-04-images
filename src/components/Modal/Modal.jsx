@@ -1,41 +1,53 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { Component, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import css from './Modal.module.css';
 
 const modalRoot = document.querySelector('#modal-root');
 
-class Modal extends Component {
-    componentDidMount() {
-        window.addEventListener('keydown', this.hendleKeyDown);
-    }
+function Modal({ closeModal, largeImageURL }) {
+    // componentDidMount() {
+    //     window.addEventListener('keydown', this.hendleKeyDown);
+    // }
 
-    componentWillUnmount() {
-        window.removeEventListener('keydown', this.hendleKeyDown);
-    }
+    useEffect(() => {
+        window.addEventListener('keydown', hendleKeyDown);
+    });
 
-    hendleKeyDown = event => {
+    // componentWillUnmount() {
+    //     window.removeEventListener('keydown', this.hendleKeyDown);
+    // }
+
+    useEffect(() => {
+        return () => {
+            window.removeEventListener('keydown', hendleKeyDown);
+        };
+    });
+
+    function hendleKeyDown(event) {
         if (event.code === 'Escape') {
-            this.props.closeModal();
+            // this.props.closeModal();
+            closeModal();
         }
-    };
-
-    handleBackdropClick = event => {
-        if (event.target === event.currentTarget) {
-            this.props.closeModal();
-        }
-    };
-
-    render() {
-        return createPortal(
-            <div className={css.Overlay} onClick={this.handleBackdropClick}>
-                <div className={css.Modal}>
-                    <img src={this.props.largeImageURL} alt="" width={1080} />
-                </div>
-            </div>,
-            modalRoot
-        );
     }
+
+    function handleBackdropClick(event) {
+        if (event.target === event.currentTarget) {
+            // this.props.closeModal();
+            closeModal();
+        }
+    }
+
+    // render() {
+    return createPortal(
+        <div className={css.Overlay} onClick={handleBackdropClick}>
+            <div className={css.Modal}>
+                <img src={largeImageURL} alt="" width={800} />
+            </div>
+        </div>,
+        modalRoot
+    );
+    // }
 }
 
 export default Modal;
