@@ -10,7 +10,7 @@ import Modal from 'components/Modal/Modal';
 import { useEffect, useState } from 'react';
 
 const ImageGallery = props => {
-    console.log(props);
+    // console.log(props);
 
     const { searchText, pageStart } = props;
 

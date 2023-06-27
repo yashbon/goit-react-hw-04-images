@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
 import css from './Searchbar.module.css';
-const { Component, useState } = require('react');
+const { useState } = require('react');
 
 const Searchbar = ({ handleSearch }) => {
     // state = {
     //     searchText: '',
     // };
     const [searchText, setSearchText] = useState('');
-    const [page, setPage] = useState(1);
+    // const [page, setPage] = useState(1);
 
     function handleChange(event) {
         // this.setState({ searchText: event.target.value });
@@ -30,7 +30,7 @@ const Searchbar = ({ handleSearch }) => {
         // handlePage()
         // this.setState({ searchText: '' });
         setSearchText('');
-        setPage(1);
+        // setPage(1);
         event.currentTarget.reset();
     }
 
@@ -40,7 +40,7 @@ const Searchbar = ({ handleSearch }) => {
             <form
                 className={css.SearchForm}
                 onSubmit={handleSubmit}
-                page={page}
+                // page={page}
             >
                 <button className={css.SearchForm__button} type="submit">
                     <span className={css.SearchForm__button__label}>
