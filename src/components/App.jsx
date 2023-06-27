@@ -19,6 +19,10 @@ function App() {
         setPage(1);
     };
 
+    const hedleLoadMore = () => {
+        setPage(page + 1);
+    };
+
     // render() {
     return (
         <div
@@ -34,7 +38,11 @@ function App() {
             }
         >
             <Searchbar handleSearch={handleSearch} />
-            <ImageGallery searchText={searchText} pageStart={page} />
+            <ImageGallery
+                searchText={searchText}
+                page={page}
+                hedleLoadMore={hedleLoadMore}
+            />
 
             <ToastContainer theme="colored" autoClose={2000} />
         </div>

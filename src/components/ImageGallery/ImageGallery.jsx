@@ -9,27 +9,30 @@ import Modal from 'components/Modal/Modal';
 
 import { useEffect, useState } from 'react';
 
-const ImageGallery = props => {
+const ImageGallery = ({ searchText, page, hedleLoadMore }) => {
     // console.log(props);
 
-    const { searchText, pageStart } = props;
-
+    // const { searchText, pageStart } = props;
+    // const text = searchText;
     // console.log('pageStart: >> ', pageStart);
-
     // let pageOther = pageStart;
-
+    // const [searchText, setSearchText] = useState(text);
     const [gallery, setGallery] = useState([]);
-    const [page, setPage] = useState(pageStart);
+    // const [page, setPage] = useState(startPage);
     const [total, setTotal] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [largeImageURL, setLargeImageURL] = useState('');
-    // page = pageStart;
 
+    // setPage(startPage);
+
+    // page = pageStart;
+    // setSearchValue(searchText);
     // useEffect(() => setPage(1), []);
     // console.log('page', page);
 
     useEffect(() => {
+        // setSearchValue(searchText);
         if (!searchText) {
             return;
         }
@@ -38,11 +41,13 @@ const ImageGallery = props => {
         // prevProps.searchText !== this.props.searchText ||
         // prevState.page < this.state.page
         // ) {
+        // const fetch = () => {
         setIsLoading(true);
 
         // console.log(searchText);
         // console.log('page: >> ', page);
-        console.log(searchText, page);
+        // console.log('searchValue', searchText);
+        // console.log(searchText, page);
         // pageOther = page;
         getImages(searchText, page)
             .then(response => {
@@ -50,6 +55,7 @@ const ImageGallery = props => {
                 // console.log(page);
                 if (response.totalHits <= 0) {
                     toast.info('Sorry, nothing was found!');
+
                     return;
                 }
                 toast.success('Wow so easy!', { autoClose: 500 });
@@ -58,16 +64,18 @@ const ImageGallery = props => {
 
                 // prevProps !== this.props
                 // console.log('total', total);
-                console.log('page', page);
-                setGallery(prevGallary =>
-                    page === 1
-                        ? response.hits
-                        : [...prevGallary, ...response.hits]
-                );
+                // console.log('page >>', page);
+                // console.log('startPage >>', startPage);
 
-                // page === 1
-                //     ? setGallery([...response.hits])
-                //     : setGallery(gallery => [...gallery, ...response.hits]);
+                // setGallery(gallery =>
+                //     page === startPage
+                //         ? response.hits
+                //         : [...gallery, ...response.hits]
+                // );
+
+                page === 1
+                    ? setGallery([...response.hits])
+                    : setGallery(gallery => [...gallery, ...response.hits]);
 
                 const totalPages = Math.round(response.totalHits / 12);
 
@@ -85,6 +93,9 @@ const ImageGallery = props => {
                 // виконується завжди
                 setIsLoading(false);
             });
+        // };
+        // fetch();
+
         // }
     }, [searchText, page]);
 
@@ -126,14 +137,14 @@ const ImageGallery = props => {
     //     }
     // }
 
-    const hedleLoadMore = event => {
-        // this.setState(({ page }) => ({ page: page + 1 }));
-        setPage(page + 1);
+    // const hedleLoadMore = event => {
+    //     // this.setState(({ page }) => ({ page: page + 1 }));
+    //     setPage(page + 1);
 
-        // pageOther = pageOther + 1;
-        // console.log('pageOther + 1 =', pageOther);
-        console.log('click page =', page);
-    };
+    //     // pageOther = pageOther + 1;
+    //     // console.log('pageOther + 1 =', pageOther);
+    //     // console.log('click page =', page);
+    // };
 
     function togleModal(largeImageURL) {
         // this.setState(state => ({
