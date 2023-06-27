@@ -31,7 +31,6 @@ const ImageGallery = props => {
 
     useEffect(() => {
         if (!searchText) {
-            // console.log('searchText: FALSE');
             return;
         }
 
