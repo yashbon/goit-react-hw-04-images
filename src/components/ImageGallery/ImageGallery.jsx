@@ -57,7 +57,7 @@ const ImageGallery = props => {
                 // setGallery(gallery => [...gallery, ...response.hits]);
 
                 // prevProps !== this.props
-                console.log('total', total);
+                // console.log('total', total);
                 console.log('page', page);
                 setGallery(prevGallary =>
                     page === 1
@@ -86,7 +86,7 @@ const ImageGallery = props => {
                 setIsLoading(false);
             });
         // }
-    }, [searchText, page, total]);
+    }, [searchText, page]);
 
     // componentDidUpdate(prevProps, prevState) {
     //     if (
