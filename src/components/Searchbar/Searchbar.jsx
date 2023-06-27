@@ -9,6 +9,7 @@ const Searchbar = ({ handleSearch }) => {
     //     searchText: '',
     // };
     const [searchText, setSearchText] = useState('');
+    const [page, setPage] = useState(1);
 
     function handleChange(event) {
         // this.setState({ searchText: event.target.value });
@@ -26,15 +27,21 @@ const Searchbar = ({ handleSearch }) => {
 
         // this.props.handleSearch(this.state.searchText);
         handleSearch(searchText);
+        // handlePage()
         // this.setState({ searchText: '' });
         setSearchText('');
+        setPage(1);
         event.currentTarget.reset();
     }
 
     // render() {
     return (
         <div className={css.Searchbar}>
-            <form className={css.SearchForm} onSubmit={handleSubmit}>
+            <form
+                className={css.SearchForm}
+                onSubmit={handleSubmit}
+                page={page}
+            >
                 <button className={css.SearchForm__button} type="submit">
                     <span className={css.SearchForm__button__label}>
                         Search
@@ -48,6 +55,7 @@ const Searchbar = ({ handleSearch }) => {
                     placeholder="Search images and photos"
                     onChange={handleChange}
                     // value={this.state.searchText}
+                    value={searchText}
                 />
             </form>
         </div>

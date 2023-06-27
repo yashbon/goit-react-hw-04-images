@@ -9,30 +9,17 @@ import Modal from 'components/Modal/Modal';
 
 import { useEffect, useState } from 'react';
 
-// const { Component } = require('react');
-
 const ImageGallery = props => {
-    // console.log(props);
+    console.log(props);
 
-    const { searchText } = props;
-    // console.log(page);
-    // console.log('searchText: >> ', searchText);
+    const { searchText, pageStart } = props;
 
-    // const oldSearchText = searchText;
-    // console.log('oldSearchText: >> ', oldSearchText);
+    // console.log('pageStart: >> ', pageStart);
 
-    // state = {
-    // gallery: [],
-    // page: 1,
-    // total: 0,
-    // isLoading: false,
-    // showModal: false,
-    // largeImageURL: '',
-    // isNewSearch: true,
-    // };
+    // let pageOther = pageStart;
 
     const [gallery, setGallery] = useState([]);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(pageStart);
     const [total, setTotal] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -40,24 +27,28 @@ const ImageGallery = props => {
     // page = pageStart;
 
     // useEffect(() => setPage(1), []);
+    // console.log('page', page);
 
     useEffect(() => {
         if (!searchText) {
+            // console.log('searchText: FALSE');
             return;
         }
+
         // if (
         // prevProps.searchText !== this.props.searchText ||
         // prevState.page < this.state.page
         // ) {
         setIsLoading(true);
 
-        console.log(searchText);
-        console.log(page);
-
+        // console.log(searchText);
+        // console.log('page: >> ', page);
+        console.log(searchText, page);
+        // pageOther = page;
         getImages(searchText, page)
             .then(response => {
-                console.log(response);
-                console.log(page);
+                // console.log(response);
+                // console.log(page);
                 if (response.totalHits <= 0) {
                     toast.info('Sorry, nothing was found!');
                     return;
@@ -67,10 +58,17 @@ const ImageGallery = props => {
                 // setGallery(gallery => [...gallery, ...response.hits]);
 
                 // prevProps !== this.props
+                console.log('total', total);
+                console.log('page', page);
+                setGallery(prevGallary =>
+                    page === 1
+                        ? response.hits
+                        : [...prevGallary, ...response.hits]
+                );
 
-                page === 1
-                    ? setGallery([...response.hits])
-                    : setGallery(gallery => [...gallery, ...response.hits]);
+                // page === 1
+                //     ? setGallery([...response.hits])
+                //     : setGallery(gallery => [...gallery, ...response.hits]);
 
                 const totalPages = Math.round(response.totalHits / 12);
 
@@ -89,7 +87,7 @@ const ImageGallery = props => {
                 setIsLoading(false);
             });
         // }
-    }, [searchText, page]);
+    }, [searchText, page, total]);
 
     // componentDidUpdate(prevProps, prevState) {
     //     if (
@@ -132,7 +130,10 @@ const ImageGallery = props => {
     const hedleLoadMore = event => {
         // this.setState(({ page }) => ({ page: page + 1 }));
         setPage(page + 1);
-        // page = page + 1;
+
+        // pageOther = pageOther + 1;
+        // console.log('pageOther + 1 =', pageOther);
+        console.log('click page =', page);
     };
 
     function togleModal(largeImageURL) {
